@@ -5,23 +5,17 @@ import (
 	"testing"
 )
 
-func TestGetIPVersion(t *testing.T) {
+func TestIsValidIPv4(t *testing.T) {
 
-	ip4 := "127.0.0.1"
-	ip6 := "fe80::1"
+	ip := "127.0.0.1"
 
 	/*
 		net.IP
 	*/
 	{
-		i := net.ParseIP(ip4)
-		if v := GetIPVersion(i); v != IPV4 {
-			t.Fatalf("Failed to get the IP version with %s (net.IP), got %d", ip4, v)
-		}
-
-		i = net.ParseIP(ip6)
-		if v := GetIPVersion(&i); v != IPV6 {
-			t.Fatalf("Failed to get the IP version with %s (*net.IP), got %d", ip6, v)
+		i := net.ParseIP(ip)
+		if !IsValidIPv4(i) {
+			t.Fatalf("IsValidIPv4() failed with net.IP")
 		}
 	}
 
@@ -29,20 +23,15 @@ func TestGetIPVersion(t *testing.T) {
 		net.IPAddr
 	*/
 	{
-		i, err := net.ResolveIPAddr("ip4", ip4)
+		i, err := net.ResolveIPAddr("ip4", ip)
 		if err != nil {
-			t.Fatalf("Failed to resolve IPAddr with %s: %s", ip4, err)
+			t.Fatalf("Failed to resolve IPAddr with %s: %s", ip, err)
 		}
-		if v := GetIPVersion(*i); v != IPV4 {
-			t.Fatalf("Failed to get the IP version with %s (net.IPAddr), got %d", ip4, v)
+		if !IsValidIPv4(*i) {
+			t.Fatalf("IsValidIPv4() failed with net.IPAddr")
 		}
-
-		i, err = net.ResolveIPAddr("ip6", ip6)
-		if err != nil {
-			t.Fatalf("Failed to resolve IPAddr with %s: %s", ip6, err)
-		}
-		if v := GetIPVersion(i); v != IPV6 {
-			t.Fatalf("Failed to get the IP version with %s (*net.IPAddr), got %d", ip6, v)
+		if !IsValidIPv4(i) {
+			t.Fatalf("IsValidIPv4() failed with *net.IPAddr")
 		}
 	}
 
@@ -50,20 +39,15 @@ func TestGetIPVersion(t *testing.T) {
 		net.TCPAddr
 	*/
 	{
-		i, err := net.ResolveTCPAddr("tcp", ip4+":80")
+		i, err := net.ResolveTCPAddr("tcp", ip+":80")
 		if err != nil {
-			t.Fatalf("Failed to resolve TCPAddr with %s:80: %s", ip4, err)
+			t.Fatalf("Failed to resolve TCPAddr with %s:80 : %s", ip, err)
 		}
-		if v := GetIPVersion(*i); v != IPV4 {
-			t.Fatalf("Failed to get the IP version with %s (net.TCPAddr), got %d", ip4, v)
+		if !IsValidIPv4(*i) {
+			t.Fatalf("IsValidIPv4() failed with net.TCPAddr")
 		}
-
-		i, err = net.ResolveTCPAddr("tcp", "["+ip6+"]:80")
-		if err != nil {
-			t.Fatalf("Failed to resolve TCPAddr with [%s]:80 : %s", ip6, err)
-		}
-		if v := GetIPVersion(i); v != IPV6 {
-			t.Fatalf("Failed to get the IP version with [%s]:80 (*net.TCPAddr), got %d", ip6, v)
+		if !IsValidIPv4(i) {
+			t.Fatalf("IsValidIPv4() failed with *net.TCPAddr")
 		}
 	}
 
@@ -71,32 +55,133 @@ func TestGetIPVersion(t *testing.T) {
 		net.UDPAddr
 	*/
 	{
-		i, err := net.ResolveTCPAddr("tcp", ip4+":80")
+		i, err := net.ResolveUDPAddr("udp", ip+":80")
 		if err != nil {
-			t.Fatalf("Failed to resolve UDPAddr with %s:80: %s", ip4, err)
+			t.Fatalf("Failed to resolve UDPAddr with %s:80 : %s", ip, err)
 		}
-		if v := GetIPVersion(*i); v != IPV4 {
-			t.Fatalf("Failed to get the IP version with %s (net.UDPAddr), got %d", ip4, v)
+		if !IsValidIPv4(*i) {
+			t.Fatalf("IsValidIPv4() failed with net.UDPAddr")
 		}
-
-		i, err = net.ResolveTCPAddr("tcp", "["+ip6+"]:80")
-		if err != nil {
-			t.Fatalf("Failed to resolve UDPAddr with [%s]:80 : %s", ip6, err)
-		}
-		if v := GetIPVersion(i); v != IPV6 {
-			t.Fatalf("Failed to get the IP version with [%s]:80 (*net.UDPAddr), got %d", ip6, v)
+		if !IsValidIPv4(i) {
+			t.Fatalf("IsValidIPv4() failed with *net.UDPAddr")
 		}
 	}
 
 	/*
 		string
 	*/
-	if v := GetIPVersion(ip4); v != IPV4 {
-		t.Fatalf("Failed to get the IP version with%s, got %d", ip4, v)
+	{
+		if !IsValidIPv4(ip) {
+			t.Fatalf("IsValidIPv4() failed with string")
+		}
+
+		if IsValidIPv4("invalid") {
+			t.Fatalf("IsValidIPv4() failed with string")
+		}
+	}
+}
+
+func TestIsValidIPv6(t *testing.T) {
+
+	ip := "fe80::1"
+
+	/*
+		net.IP
+	*/
+	{
+		i := net.ParseIP(ip)
+		if !IsValidIPv6(i) {
+			t.Fatalf("IsValidIPv6() failed with net.IP")
+		}
 	}
 
-	if v := GetIPVersion(ip6); v != IPV6 {
-		t.Fatalf("Failed to get the IP version with %s, got %d", ip6, v)
+	/*
+		net.IPAddr
+	*/
+	{
+		i, err := net.ResolveIPAddr("ip6", ip)
+		if err != nil {
+			t.Fatalf("Failed to resolve IPAddr with %s: %s", ip, err)
+		}
+		if !IsValidIPv6(*i) {
+			t.Fatalf("IsValidIPv6() failed with net.IPAddr")
+		}
+		if !IsValidIPv6(i) {
+			t.Fatalf("IsValidIPv6() failed with *net.IPAddr")
+		}
 	}
 
+	/*
+		net.TCPAddr
+	*/
+	{
+		i, err := net.ResolveTCPAddr("tcp", "["+ip+"]:80")
+		if err != nil {
+			t.Fatalf("Failed to resolve TCPAddr with %s:80 : %s", ip, err)
+		}
+		if !IsValidIPv6(*i) {
+			t.Fatalf("IsValidIPv6() failed with net.TCPAddr")
+		}
+		if !IsValidIPv6(i) {
+			t.Fatalf("IsValidIPv6() failed with *net.TCPAddr")
+		}
+	}
+
+	/*
+		net.UDPAddr
+	*/
+	{
+		i, err := net.ResolveUDPAddr("udp", "["+ip+"]:80")
+		if err != nil {
+			t.Fatalf("Failed to resolve UDPAddr with %s:80 : %s", ip, err)
+		}
+		if !IsValidIPv6(*i) {
+			t.Fatalf("IsValidIPv6() failed with net.UDPAddr")
+		}
+		if !IsValidIPv6(i) {
+			t.Fatalf("IsValidIPv6() failed with *net.UDPAddr")
+		}
+	}
+
+	/*
+		string
+	*/
+	{
+		if !IsValidIPv6(ip) {
+			t.Fatalf("IsValidIPv6() failed with string")
+		}
+
+		if IsValidIPv6("invalid") {
+			t.Fatalf("IsValidIPv6() failed with string")
+		}
+	}
+}
+func TestIsValidPort(t *testing.T) {
+	if !IsValidPort(80) {
+		t.Fatalf("80 reported as invalid port!")
+	}
+
+	if !IsValidPort(uint8(80)) {
+		t.Fatalf("80 reported as invalid port!")
+	}
+
+	if !IsValidPort(uint8(100)) {
+		t.Fatalf("uint8(100) resported as an invalid port!")
+	}
+
+	if !IsValidPort(uint16(40000)) {
+		t.Fatalf("uint16(40000) resported as an ivalid port!")
+	}
+
+	if IsValidPort(int32(400000)) {
+		t.Fatalf("int32(400000) resported as a valid port!")
+	}
+
+	if IsValidPort(uint64(4000000)) {
+		t.Fatalf("uint64(4000000) resported as a valid port!")
+	}
+
+	if IsValidPort(uint(40000000)) {
+		t.Fatalf("uint(40000000) resported as a valid port!")
+	}
 }
