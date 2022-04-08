@@ -166,22 +166,22 @@ func TestIsValidPort(t *testing.T) {
 	}
 
 	if !IsValidPort(uint8(100)) {
-		t.Fatalf("uint8(100) resported as an invalid port!")
+		t.Fatalf("uint8(100) reported as an invalid port!")
 	}
 
 	if !IsValidPort(uint16(40000)) {
-		t.Fatalf("uint16(40000) resported as an ivalid port!")
+		t.Fatalf("uint16(40000) reported as an ivalid port!")
 	}
 
 	if IsValidPort(int32(400000)) {
-		t.Fatalf("int32(400000) resported as a valid port!")
+		t.Fatalf("int32(400000) reported as a valid port!")
 	}
 
 	if IsValidPort(uint64(4000000)) {
-		t.Fatalf("uint64(4000000) resported as a valid port!")
+		t.Fatalf("uint64(4000000) reported as a valid port!")
 	}
 
 	if IsValidPort(uint(40000000)) {
-		t.Fatalf("uint(40000000) resported as a valid port!")
+		t.Fatalf("uint(40000000) reported as a valid port!")
 	}
 }
