@@ -262,3 +262,14 @@ func TestIsValidPort(t *testing.T) {
 		t.Fatalf("uint(40000000) reported as a valid port!")
 	}
 }
+
+func TestIsDomainName(t *testing.T) {
+
+	if !IsDomainName("elmasy.com") {
+		t.Fatalf("\"elmasy.com\" reported as an invalid domain name")
+	}
+
+	if IsDomainName(".a") {
+		t.Fatalf("\"a\" com reported as a valid domain name")
+	}
+}
