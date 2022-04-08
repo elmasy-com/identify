@@ -13,7 +13,7 @@ type PortTypes interface {
 	int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | int | uint | string
 }
 
-// IsValidIPv4 whether ip is valid IPv4 address.
+// IsValidIPv4 checks whether ip is valid IPv4 address.
 func IsValidIPv4[T IPTypes](ip T) bool {
 
 	var i net.IP
@@ -44,7 +44,7 @@ func IsValidIPv4[T IPTypes](ip T) bool {
 	return i.To4() != nil
 }
 
-// IsValidIPv6 whether ip is valid IPv6 address.
+// IsValidIPv6 checks whether ip is valid IPv6 address.
 func IsValidIPv6[T IPTypes](ip T) bool {
 
 	var i net.IP
@@ -75,6 +75,12 @@ func IsValidIPv6[T IPTypes](ip T) bool {
 	return i.To16() != nil
 }
 
+// IsValidIP checks whether ip is valid IP address.
+func IsValidIP[T IPTypes](ip T) bool {
+	return IsValidIPv4(ip) || IsValidIPv6(ip)
+}
+
+// IsValidPort checks whether p is valid port number.
 func IsValidPort[T PortTypes](p T) bool {
 
 	var (
