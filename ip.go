@@ -3,6 +3,7 @@ package identify
 import (
 	"net"
 	"strconv"
+	"strings"
 )
 
 type IPTypes interface {
@@ -36,6 +37,9 @@ func IsValidIPv4[T IPTypes](ip T) bool {
 	case *net.UDPAddr:
 		i = v.IP
 	case string:
+		if !strings.Contains(v, ".") {
+			return false
+		}
 		i = net.ParseIP(v)
 	default:
 		return false
@@ -67,6 +71,9 @@ func IsValidIPv6[T IPTypes](ip T) bool {
 	case *net.UDPAddr:
 		i = v.IP
 	case string:
+		if !strings.Contains(v, ":") {
+			return false
+		}
 		i = net.ParseIP(v)
 	default:
 		return false
