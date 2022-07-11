@@ -7,7 +7,7 @@ import (
 )
 
 type IPTypes interface {
-	net.IP | *net.IP | net.IPAddr | *net.IPAddr | net.TCPAddr | *net.TCPAddr | net.UDPAddr | *net.UDPAddr | string
+	net.IP | *net.IP | net.IPNet | *net.IPNet | net.IPAddr | *net.IPAddr | net.TCPAddr | *net.TCPAddr | net.UDPAddr | *net.UDPAddr | string
 }
 
 type PortTypes interface {
@@ -24,6 +24,10 @@ func IsValidIPv4[T IPTypes](ip T) bool {
 		i = v
 	case *net.IP:
 		i = *v
+	case net.IPNet:
+		i = v.IP
+	case *net.IPNet:
+		i = v.IP
 	case net.IPAddr:
 		i = v.IP
 	case *net.IPAddr:
@@ -58,6 +62,10 @@ func IsValidIPv6[T IPTypes](ip T) bool {
 		i = v
 	case *net.IP:
 		i = *v
+	case net.IPNet:
+		i = v.IP
+	case *net.IPNet:
+		i = v.IP
 	case net.IPAddr:
 		i = v.IP
 	case *net.IPAddr:
